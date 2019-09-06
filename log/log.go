@@ -3,8 +3,6 @@ package log
 import (
 	"log"
 	"os"
-
-	"github.com/wdy0808/go-common/file"
 )
 
 var (
@@ -14,19 +12,9 @@ var (
 )
 
 func init() {
-	currentDir := file.CurrentDir()
-	logFilePath := currentDir + "/log/logfile"
-	if file.FileExist(logFilePath) {
-		os.Rename(logFilePath, logFilePath+".backup")
-	}
-	file, err := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("file open error : %v", err.Error())
-	}
-
-	logInfo = log.New(file, "[INFO] ", log.Ldate|log.Lmicroseconds)
-	logWarning = log.New(file, "[WARNING] ", log.Ldate|log.Lmicroseconds|log.Lshortfile)
-	logError = log.New(file, "[ERROR] ", log.Ldate|log.Lmicroseconds|log.Lshortfile)
+	logInfo = log.New(os.Stderr, "[INFO] ", log.Ldate|log.Lmicroseconds)
+	logWarning = log.New(os.Stderr, "[WARNING] ", log.Ldate|log.Lmicroseconds|log.Lshortfile)
+	logError = log.New(os.Stderr, "[ERROR] ", log.Ldate|log.Lmicroseconds|log.Lshortfile)
 }
 
 func LogInfo(format string, a ...interface{}) {
